@@ -1,6 +1,8 @@
 #include <stdio.h>
+#include <merge.h>
+
 
 int main() {
-    printf("Hello, World!\n");
+    merge();
     return 0;
 }
