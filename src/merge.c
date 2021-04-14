@@ -1,16 +1,32 @@
 #include <merge.h>
 
 void merge(){
-    char **files = get_dir_file("./xml");
+    char **dir = get_credentials("[XML]");
+    char **files = get_dir_file(dir[0]);
     char *path;
     int i = 0;
+    char folder[9];
+    char file[7];
+    struct tm *local;
+    char *savePath;
+    time_t now;
+    time(&now);
+    local = localtime(&now);
+    sprintf(folder, "year%d", local->tm_year + 1900);
+    sprintf(file, "%02d.xml", local->tm_mon);
+    savePath = malloc(strlen(dir[1]) + 16);
+    strcpy(savePath, dir[1]);
+    strcat(savePath, folder);
+    strcat(savePath, "/");
+    mkdir(savePath, S_IRWXU | S_IRWXG | S_IRWXO);
+    strcat(savePath, file);
     xmlDocPtr doc = xmlNewDoc(BAD_CAST"1.1");
     xmlNodePtr root, deposit;
-    root = xmlNewNode(NULL, BAD_CAST"root");
+    root = xmlNewNode(NULL, BAD_CAST"deposits");
     xmlDocSetRootElement(doc, root);
     while(files[i] != NULL){
-        path = malloc(strlen(files[i]) + strlen("./xml/") + 1);
-        strcpy(path, "./xml/");
+        path = malloc(strlen(files[i]) + strlen(dir[0]) + 1);
+        strcpy(path, dir[0]);
         strcat(path, files[i]);
         deposit = newDeposit(files[i]);
         xmlAddChild(deposit, retrieveDocRoot(path));
@@ -18,7 +34,7 @@ void merge(){
         free(path);
         ++i;
     }
-    xmlSaveFileEnc("-", doc, "UTF-8");
+    xmlSaveFileEnc(savePath, doc, "UTF-8");
     xmlFreeDoc(doc);
     free_result(files);
     xmlCleanupParser();

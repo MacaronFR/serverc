@@ -7,5 +7,6 @@
 
 char **get_dir_file(char *path);
 void free_result(char **to_free);
+char **get_credentials(char *section);
 
 #endif //SERVERC_UTILS_H

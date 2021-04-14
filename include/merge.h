@@ -4,6 +4,8 @@
 #include <libxml/tree.h>
 #include <libxml/parser.h>
 #include <utils.h>
+#include <time.h>
+#include <sys/stat.h>
 
 void merge();
 xmlNodePtr newDeposit(char *file);
